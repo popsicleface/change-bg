@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Add this to `crontab -e`
+# * * * * * $HOME/Pictures/wallpaper/change-bg/change-bg
+
+export DISPLAY=:0
+PID=$(pgrep gnome-session)
+export DBUS_SESSION_BUS_ADDRESS=$(
+  grep -z DBUS_SESSION_BUS_ADDRESS /proc/$PID/environ|cut -d= -f2-
+)
+
+base_dir=$(cd "$(dirname "$0")"; pwd)
+change_bg_py=$base_dir/change-bg.py
+log_out=$base_dir/log.out
+log_err=$base_dir/log.err
+
+"$change_bg_py" > "$log_out" 2> "$log_err"
